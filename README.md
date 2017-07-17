@@ -1,4 +1,4 @@
-# testla
+# :blue_car: Testla
 Easy testing lib for Node.js from comments
 
 Idea:
