@@ -1,5 +1,5 @@
 # :white_check_mark: :red_circle: Testla
-Write tests in JS comments! Run it easy!
+Write tests in JS comments! Run it easy! :relaxed: :neckbeard: :ok_hand: :-1:
 ## Desscription
 TODO
 ## Advantages
