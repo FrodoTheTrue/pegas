@@ -1,5 +1,13 @@
 # :white_check_mark: :red_circle: Testla
-Easy testing lib for Node.js from comments
+Write tests in JS comments! Run it easy!
+## Desscription
+TODO
+## Advantages
+TODO
+## Usage
+TODO
+## Examples
+TODO
 
 Idea:
 1) WriteTests in comments like JSDoc
