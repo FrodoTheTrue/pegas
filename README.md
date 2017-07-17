@@ -1,4 +1,4 @@
-# :white_check_mark: Testla
+# :white_check_mark: :red_circle: Testla
 Easy testing lib for Node.js from comments
 
 Idea:
