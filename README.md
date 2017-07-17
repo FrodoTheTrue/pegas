@@ -1,4 +1,4 @@
-# :blue_car: Testla
+# :white_check_mark: Testla
 Easy testing lib for Node.js from comments
 
 Idea:
