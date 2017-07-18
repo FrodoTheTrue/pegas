@@ -1,11 +1,39 @@
 # :white_check_mark: :red_circle: Testla
 Write tests in JS comments! Run it easy! :relaxed: :neckbeard: :ok_hand: :cop:
-## Desscription
+## Description
 TODO
 ## Advantages
 TODO
 ## Usage
-TODO
+1) Write tests in comments:
+```js
+// logic.js
+
+/**T
+  (2, 2) => 4
+  (3, 3) => 6
+*/
+function summ(a, b) {
+  return a + b;
+}
+
+module.exports.summ = summ;
+```
+2) Create simple config:
+```js
+// config.testla.js
+
+{
+  'test': [
+    '.../logic.js'
+  ]
+}
+
+```
+3) Run tests:
+```
+testla config.testla.js
+```
 ## Examples
 TODO
 
