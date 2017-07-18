@@ -5,7 +5,11 @@ TODO
 ## Advantages
 TODO
 ## Usage
-1) Write tests in comments:
+1) Install Testla:
+```
+npm install testla --save-dev
+```
+2) Write tests in comments:
 ```js
 // logic.js
 
@@ -19,7 +23,7 @@ function summ(a, b) {
 
 module.exports.summ = summ;
 ```
-2) Create simple config:
+3) Create simple config:
 ```js
 // config.testla.js
 
@@ -30,7 +34,7 @@ module.exports.summ = summ;
 }
 
 ```
-3) Run tests:
+4) Run tests:
 ```
 testla config.testla.js
 ```
