@@ -7,6 +7,11 @@ Testla - simple testing framework for Node.js platfrom. It allows to write tests
 ## TODO
 - [ ] Mock variables in tests
 - [ ] Write comment to test in T-test
+- [ ] Functions as params
+- [ ] Catch error's
+- [ ] Async functions
+- [ ] Promises
+- [ ] Async/Await
 ## Usage
 1) Install Testla:
 ```
