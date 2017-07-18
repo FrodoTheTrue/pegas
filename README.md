@@ -3,9 +3,10 @@ Write tests in JS comments! Run it easy! :relaxed: :neckbeard: :ok_hand: :cop:
 ## Description
 Testla - simple testing framework for Node.js platfrom. It allows to write tests to functions in comments to this function (yea, like in JSDoc) in simple format. This library first done for small scripts, you no need more files to test your app (except config maybe) and you can take tests and docs in one moment.
 ## Advantages
-TODO
+- You can write tests near with code
 ## TODO
-[x] 
+- [ ] Mock variables in tests
+- [ ] Write comment to test in T-test
 ## Usage
 1) Install Testla:
 ```
