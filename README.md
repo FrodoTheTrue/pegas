@@ -74,3 +74,12 @@ Idea:
     return a + b + c;
   }
 ```
+4) Test async functions
+```js
+  /**T
+    (2000, cb) => cb(null, { result: true })
+  */
+  function asyncFunc(paramWait, callback) {
+    setTimeout(callback, paramWait);
+  }
+```
