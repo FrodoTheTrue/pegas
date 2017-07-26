@@ -77,7 +77,7 @@ Idea:
 4) Test async functions
 ```js
   /**T
-    (2000, cb) => cb(null, { result: true })
+    (2000, cb) => cb(null, { result: true }) // check variables in callback
   */
   function asyncFunc(paramWait, callback) {
     setTimeout(callback, paramWait);
