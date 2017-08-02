@@ -17,7 +17,7 @@ Testla - simple testing framework for Node.js platfrom. It allows to write tests
 ```
 npm install testla --save-dev
 ```
-2) Write tests in comments:
+2) Write Testla-tests in block comment before function that you want to test:
 ```js
 // logic.js
 
