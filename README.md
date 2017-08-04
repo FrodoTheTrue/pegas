@@ -52,7 +52,7 @@ TODO
 Idea:
 1) WriteTests in comments like JSDoc
 ```js
-  /**T
+  /*T
     (2, 2) => 4
     (-1, 1) => 0
   */
@@ -62,7 +62,7 @@ Idea:
 ```
 2) Test async functions
 ```js
-  /**T
+  /*T
     (2000, cb) => cb(null, { result: true }) // check variables in callback
   */
   function asyncFunc(paramWait, callback) {
@@ -72,7 +72,7 @@ Idea:
 ```
 3) Mock variables and functions:
 ```js
-  /**T
+  /*T
     (1, 1) => 7
     (3, 3) => 10 { mocks: { c : 5 }}
   */
@@ -83,7 +83,7 @@ Idea:
 ```
 3) Test async/await functions:
 ```js
-  /**T
+  /*T
     () => 'fuck'
   */
   async function fuck() {
