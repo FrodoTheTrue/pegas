@@ -65,9 +65,9 @@ Idea:
   /*T
     (2000, cb) => cb(null, { result: true }) // check variables in callback
   */
-  function asyncFunc(paramWait, callback) {
-    ... async magic ...
-    callback(null, { result: true }
+  function asyncFunc(fuckingParam, callback) {
+    // ... async magic ...
+    callback(null, { result: true });
   }
 ```
 3) Mock variables and functions:
@@ -87,8 +87,7 @@ Idea:
     () => 'fuck'
   */
   async function fuck() {
-    var f = await getFuck();
-    return f;
+    return await getFuck(); // getFuck return promise, that return string 'fuck;
   }
 ```
 4) Test promises
