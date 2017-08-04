@@ -60,26 +60,42 @@ Idea:
     return a + b;
   }
 ```
-2) In config file told path to files that you want
+2) Test async functions
+```js
+  /**T
+    (2000, cb) => cb(null, { result: true }) // check variables in callback
+  */
+  function asyncFunc(paramWait, callback) {
+    ... async magic ...
+    callback(null, { result: true }
+  }
+```
 3) Mock variables and functions:
 ```js
   /**T
     (1, 1) => 7
-      Mocks:
-        c = 5
-    (3, 3) => 10
+    (3, 3) => 10 { mocks: { c : 5 }}
   */
   function summ(a, b) {
     var c = 4;
     return a + b + c;
   }
 ```
-4) Test async functions
+3) Test async/await functions:
 ```js
   /**T
-    (2000, cb) => cb(null, { result: true }) // check variables in callback
+    () => 'fuck'
   */
-  function asyncFunc(paramWait, callback) {
-    setTimeout(callback, paramWait);
-  }
+  async function fuck() {
+    var f = await getFuck();
+    return f;
+  }
+```
+4) Test promises
+```
+Coming soon
+```
+5) Time tests
+```
+Coming soon
 ```
