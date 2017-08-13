@@ -1,0 +1,35 @@
+{
+  "name": "testla",
+  "version": "1.0.0-pre-alpha",
+  "description": "Write tests in javascript comments",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FrodoTheTrue/testla.git"
+  },
+  "scripts": {
+    "lint": "eslint ./src ./test",
+    "test": "mocha test",
+    "codecov": "istanbul cover node_modules/.bin/_mocha test/"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "pre-commit": "^1.2.2",
+    "sinon": "^3.2.0"
+  },
+  "dependencies": {
+    "chai": "^4.1.1",
+    "esprima": "^4.0.0",
+    "esprima-extract-comments": "^0.2.1",
+    "extract-comments": "^0.10.1",
+    "json5": "^0.5.1",
+    "parse-comments": "^0.4.3"
+  }
+}
