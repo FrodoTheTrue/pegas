@@ -68,8 +68,6 @@ More examples [here](https://github.com/FrodoTheTrue/testla/tree/master/examples
 
 ## Features
 
-Idea:
-
 1) Change export naming
 
 ```js
