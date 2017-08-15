@@ -125,6 +125,6 @@ More examples [here](https://github.com/FrodoTheTrue/testla/tree/master/examples
     () => Error
   */
   function returnError() {
-    throw new Error(); // getFuck return promise, that return string 'fuck;
+    throw new Error();
   }
 ```
