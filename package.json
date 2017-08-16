@@ -9,6 +9,7 @@
   "scripts": {
     "lint": "eslint ./src ./test",
     "test": "mocha test",
+    "codecov-ci": "istanbul cover node_modules/.bin/_mocha test/ && codecov",
     "codecov": "istanbul cover node_modules/.bin/_mocha test/"
   },
   "pre-commit": [
@@ -16,6 +17,7 @@
     "test"
   ],
   "devDependencies": {
+    "codecov": "^2.3.0",
     "eslint": "^4.2.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
