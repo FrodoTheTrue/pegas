@@ -17,6 +17,8 @@ class Testla {
         this._COMMENT_ALLOWED_TYPES = [
             'Block',
         ];
+        this.CONSOLE_COLOR_GREEN = '\x1b[31m';
+        this.CONSOLE_COLOR_RED = '\x1b[32m';
     }
 
     /**
@@ -219,12 +221,12 @@ class Testla {
                         assert.deepEqual(testFunc[funcName](...vars), result);
                     } catch (err) {
                         // eslint-disable-next-line no-console
-                        console.log('\x1b[31m', '       FAILED: ', '\x1b[0m',
+                        console.log(this.CONSOLE_COLOR_GREEN, '       FAILED: ', '\x1b[0m',
                             commentData[i],
                             `(expected: ${JSON.stringify(testFunc[funcName](...vars))})`);
                     }
                     // eslint-disable-next-line no-console
-                    console.log('\x1b[32m', '       OK: ', '\x1b[0m', commentData[i]);
+                    console.log(this.CONSOLE_COLOR_RED, '       OK: ', '\x1b[0m', commentData[i]);
                 }
             });
         });
