@@ -1,4 +1,4 @@
-# :white_check_mark: :x: Testla [![Build Status](https://travis-ci.org/FrodoTheTrue/testla.svg?branch=master)](https://travis-ci.org/FrodoTheTrue/testla)
+# :white_check_mark: :x: Testla [![Build Status](https://travis-ci.org/FrodoTheTrue/testla.svg?branch=master)](https://travis-ci.org/FrodoTheTrue/testla) [![codecov](https://codecov.io/gh/FrodoTheTrue/testla/branch/master/graph/badge.svg)](https://codecov.io/gh/FrodoTheTrue/testla)
 Write tests in JS comments! (inspired by JSDoc)
 ## Description
 Testla - simple testing framework for Node.js platfrom (later maybe for client). It allows to write tests to functions in comments to this function (yea, like in JSDoc) in simple format. This library first done for small scripts, you no need more files to test your app and you can take tests and docs in one moment.
