@@ -161,10 +161,18 @@ class Testla {
                 });
                 logger.logLine(funcName);
 
+                const exportOption = commentData[1].trim();
+                if (exportOption.startsWith('ExportAs: ')) {
+                    funcName = exportOption.split('ExportAs: ')[1];
+                }
                 const testFunc = require(ppath.resolve(path)); //eslint-disable-line
+
                 for (let i = 1; i < commentData.length; i++) {
                     if (!commentData[i]) continue;
                     commentData[i] = commentData[i].trim();
+
+                    if (commentData[i][0] !== '(') continue;
+
                     let [vars, result] = commentData[i].split('=>');
                     vars = vars.match(/\(([^)]+)\)/)[1].split(',');
 

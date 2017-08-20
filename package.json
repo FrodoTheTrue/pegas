@@ -10,6 +10,9 @@
     "lint": "eslint ./src ./test",
     "test": "istanbul cover node_modules/.bin/_mocha test/"
   },
+  "bin": {
+    "testla": "bin/testla-cli.js"
+  },
   "pre-commit": [
     "lint",
     "test"
