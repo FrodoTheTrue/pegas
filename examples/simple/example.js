@@ -1,6 +1,6 @@
 /*T
   (2, 2) => 4
-  (4, 3) => 7
+  (4, 3) => 8
 */
 function summ(a, b) {
     return a + b;
