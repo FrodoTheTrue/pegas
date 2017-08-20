@@ -28,7 +28,16 @@ function reverseArray(arr) {
   return arr.reverse();
 }
 
+/*T
+  ExportAs: renameExportExample
+  ('b') => 'abc'
+*/
+function exportExample(str) {
+  return 'a' + str + 'c';
+}
+
 module.exports.summ = summ;
 module.exports.mull = mull;
 module.exports.objective = objective;
 module.exports.reverseArray = reverseArray;
+module.exports.renameExportExample = exportExample;
