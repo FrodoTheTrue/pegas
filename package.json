@@ -8,9 +8,7 @@
   },
   "scripts": {
     "lint": "eslint ./src ./test",
-    "test": "mocha test",
-    "codecov-ci": "istanbul cover node_modules/.bin/_mocha test/ && codecov",
-    "codecov": "istanbul cover node_modules/.bin/_mocha test/"
+    "test": "istanbul cover node_modules/.bin/_mocha test/"
   },
   "pre-commit": [
     "lint",
@@ -24,7 +22,9 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "pre-commit": "^1.2.2",
-    "sinon": "^3.2.0"
+    "proxyquire": "^1.8.0",
+    "rewire": "^2.5.2",
+    "sinon": "^3.2.1"
   },
   "dependencies": {
     "chai": "^4.1.1",

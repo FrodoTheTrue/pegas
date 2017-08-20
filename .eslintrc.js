@@ -9,6 +9,7 @@ module.exports = {
         'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
         'no-param-reassign': 0,
         'no-continue': 0,
-        'consistent-return': 0
+        'consistent-return': 0,
+        'class-methods-use-this': 0
     }
 }

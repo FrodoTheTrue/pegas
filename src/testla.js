@@ -1,49 +1,25 @@
 const fs = require('fs');
 const ppath = require('path');
 const esprima = require('esprima');
-const json5 = require('json5');
 const assert = require('chai').assert;
+const utils = require('./utils');
+const logger = require('./logger');
+const json5 = require('json5');
+
+const FUNCTION_ALLOWED_TYPES = [
+    'FunctionDeclaration',
+    'FunctionExpression',
+    'ArrowFunctionExpression',
+];
+const COMMENT_ALLOWED_TYPES = [
+    'Block',
+];
 
 /** Parsing logic for Testla comments */
 class Testla {
     constructor(configPath) {
         this._configPath = configPath;
         this._testlaConfig = require(this._configPath); // eslint-disable-line
-        this._FUNCTION_ALLOWED_TYPES = [
-            'FunctionDeclaration',
-            'FunctionExpression',
-            'ArrowFunctionExpression',
-        ];
-        this._COMMENT_ALLOWED_TYPES = [
-            'Block',
-        ];
-        this.CONSOLE_COLOR_GREEN = '\x1b[31m';
-        this.CONSOLE_COLOR_RED = '\x1b[32m';
-    }
-
-    /**
-     * Returns list of files in directory recursively
-     *
-     * @param {String} directory - path to directory
-     *
-     * @returns {String[]}
-     */
-    _getFilesDeeply(directory) {
-        let results = [];
-        const list = fs.readdirSync(directory);
-
-        list.forEach((file) => {
-            const fileDir = `${directory}/${file}`;
-            const stat = fs.statSync(fileDir);
-
-            if (stat && stat.isDirectory()) {
-                results = results.concat(this._getFilesDeeply(fileDir));
-            } else {
-                results.push(fileDir);
-            }
-        });
-
-        return results;
     }
 
     /**
@@ -54,14 +30,21 @@ class Testla {
      * @returns {Object[]}
      */
     _filterTestlaComments(comments) {
-        return comments.filter(comment => !this._COMMENT_ALLOWED_TYPES.indexOf(comment.type));
+        return comments.filter(comment => !COMMENT_ALLOWED_TYPES.indexOf(comment.type));
     }
 
+    /**
+     * Returns only comments, that Testla can parse
+     *
+     * @param {EsprimaData} esprimaData - parsed js object
+     *
+     * @returns {Object[]}
+     */
     _sortFunctionsAndComments(esprimaData) {
         const result = [];
 
         esprimaData.body.forEach((functionData) => {
-            if (!this._FUNCTION_ALLOWED_TYPES.indexOf(functionData.type)) {
+            if (!FUNCTION_ALLOWED_TYPES.indexOf(functionData.type)) {
                 result.push({
                     type: 'function',
                     name: functionData.id.name,
@@ -89,70 +72,36 @@ class Testla {
         return result;
     }
 
-    static _validateConfig(config) {
-        if (!config.test) {
-            throw new Error('"test" is required in config file');
-        }
-    }
-
-    _getPathsFromConfigs(config) {
+    _getPathsFromConfigs() {
         let resultPaths = [];
 
-        Testla._validateConfig(this._testlaConfig);
+        utils.validateConfig(this._testlaConfig);
 
-        config.test.forEach((path) => {
+        this._testlaConfig.test.forEach((path) => {
             path = ppath.resolve(this._configPath, '../', path);
-            resultPaths = [...new Set([...resultPaths, ...this._getFilesDeeply(path)])];
+            resultPaths = [...new Set([...resultPaths, ...utils.getFilesDeeply(path)])];
         });
 
         return resultPaths;
     }
 
-    static _correctBrackets(str) {
-        const brackets = {
-            '[': ']',
-            '{': '}',
-            '(': ')',
-        };
-        const closeBrackets = Object.values(brackets);
-        const stack = [];
-
-        for (let i = 0; i < str.length; i++) {
-            if (brackets[str[i]]) {
-                stack.push(str[i]);
-            }
-
-            if (closeBrackets.includes(str[i])) {
-                if (stack.length === 0) {
-                    return false;
-                }
-
-                if (brackets[stack.pop()] !== str[i]) {
-                    return false;
-                }
-            }
-        }
-
-        if (stack.length > 0) {
-            return false;
-        }
-
-        return true;
+    _printOk(result) {
+        logger.log('OK:', {
+            color: 'green',
+            spacesBefore: 7,
+            spacesAfter: 5,
+        });
+        logger.logLine(result);
     }
 
-    static _createVars(vars) {
-        const result = [];
-
-        for (let i = 0; i < vars.length; i++) {
-            if (Testla._correctBrackets(vars[i])) {
-                result.push(vars[i]);
-            } else if (i + 1 < vars.length) {
-                vars[i + 1] = `${vars[i]},${vars[i + 1]}`;
-            } else {
-                throw Error('Incorrect variables in test');
-            }
-        }
-        return result;
+    _printError(result, expected) {
+        logger.log('FAILED:', {
+            color: 'red',
+            spacesBefore: 7,
+            spacesAfter: 1,
+        });
+        logger.logLine(`${result
+        } (expected: ${json5.stringify(expected)})`);
     }
 
     /**
@@ -177,7 +126,7 @@ class Testla {
             esprimaSortedData = this._sortFunctionsAndComments(esprimaData);
             comments = this._filterTestlaComments(esprimaData.comments);
 
-            console.log(`File: ${path}`); // eslint-disable-line no-console
+            logger.logLine(`File: ${path}`);
 
             comments.forEach((comment) => {
                 const commentData = comment.value.split('\n');
@@ -206,34 +155,36 @@ class Testla {
                     throw new Error('Testla comment has no function');
                 }
 
-                console.log('   function', funcName); // eslint-disable-line no-console
+                logger.log('function', {
+                    spacesBefore: 3,
+                    spacesAfter: 1,
+                });
+                logger.logLine(funcName);
 
                 const testFunc = require(ppath.resolve(path)); //eslint-disable-line
                 for (let i = 1; i < commentData.length; i++) {
                     if (!commentData[i]) continue;
+                    commentData[i] = commentData[i].trim();
                     let [vars, result] = commentData[i].split('=>');
                     vars = vars.match(/\(([^)]+)\)/)[1].split(',');
-                    vars = Testla._createVars(vars);
-                    vars = vars.map(v => json5.parse(v));
-                    result = json5.parse(result);
+
+                    vars = utils.createVars(vars);
+                    result = utils.createVars([result])[0];
 
                     try {
                         assert.deepEqual(testFunc[funcName](...vars), result);
+
+                        this._printOk(commentData[i]);
                     } catch (err) {
-                        // eslint-disable-next-line no-console
-                        console.log(this.CONSOLE_COLOR_GREEN, '       FAILED: ', '\x1b[0m',
-                            commentData[i],
-                            `(expected: ${JSON.stringify(testFunc[funcName](...vars))})`);
+                        this._printError(commentData[i], testFunc[funcName](...vars));
                     }
-                    // eslint-disable-next-line no-console
-                    console.log(this.CONSOLE_COLOR_RED, '       OK: ', '\x1b[0m', commentData[i]);
                 }
             });
         });
     }
 
     runTests() {
-        const paths = this._getPathsFromConfigs(this._testlaConfig);
+        const paths = this._getPathsFromConfigs();
         this._runTests(paths);
     }
 }
