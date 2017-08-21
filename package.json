@@ -1,6 +1,6 @@
 {
   "name": "testla",
-  "version": "1.0.0-pre-alpha",
+  "version": "1.0.0",
   "description": "Write tests in javascript comments",
   "repository": {
     "type": "git",
