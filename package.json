@@ -1,17 +1,17 @@
 {
-  "name": "testla",
+  "name": "testcom",
   "version": "1.0.0",
   "description": "Write tests in javascript comments",
   "repository": {
     "type": "git",
-    "url": "git://github.com/FrodoTheTrue/testla.git"
+    "url": "git://github.com/FrodoTheTrue/testcom.git"
   },
   "scripts": {
     "lint": "eslint ./src ./test",
     "test": "istanbul cover node_modules/.bin/_mocha test/"
   },
   "bin": {
-    "testla": "bin/testla-cli.js"
+    "testcom": "bin/testcom-cli.js"
   },
   "pre-commit": [
     "lint",
