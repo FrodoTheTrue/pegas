@@ -85,18 +85,7 @@ More examples [here](https://github.com/FrodoTheTrue/testla/tree/master/examples
   module.exports.fakeSumm = summ;
 ```
 
-2) WriteTests in comments like JSDoc
-
-```js
-  /*T
-    (2, 2) => 4
-    (-1, 1) => 0
-  */
-  function summ(a, b) {
-    return a + b;
-  }
-```
-3) Test async functions
+2) Test async functions
 
 ```js
   /*T
@@ -108,7 +97,7 @@ More examples [here](https://github.com/FrodoTheTrue/testla/tree/master/examples
   }
 ```
 
-4) Test async/await functions:
+3) Test async/await functions:
 ```js
   /*T
     () => 'fuck'
@@ -119,7 +108,7 @@ More examples [here](https://github.com/FrodoTheTrue/testla/tree/master/examples
 ```
 
 
-5) Test errors:
+4) Test errors:
 ```js
   /*T
     () => Error
