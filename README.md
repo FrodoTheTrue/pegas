@@ -100,11 +100,12 @@ More examples [here](https://github.com/FrodoTheTrue/testla/tree/master/examples
 3) Test async/await functions:
 ```js
   /*T
-    () => 'fuck'
+    () => 'text'
   */
-  async function fuck() {
-    return await getFuck(); // getFuck return promise, that return string 'fuck;
-  }
+  async function asyncAwait() {
+    await Promise.fromNode(cb => setTimeout(cb, 0));
+    return 'text';
+  }
 ```
 
 
