@@ -69,14 +69,39 @@ function createVars(vars) {
 
     for (let i = 0; i < vars.length; i++) {
         if (correctBrackets(vars[i])) {
-            result.push(vars[i]);
+            if (vars[i] !== 'cb') {
+                result.push(vars[i]);
+            }
         } else if (i + 1 < vars.length) {
             vars[i + 1] = `${vars[i]},${vars[i + 1]}`;
         } else {
             throw Error('Incorrect variables in test');
         }
     }
+
     return result.map(v => json5.parse(v));
+}
+
+function createResult(result) {
+    let type = 'simple';
+
+    if (result === 'Error') {
+        return {
+            type: 'error',
+        };
+    }
+
+    if (result.startsWith('cb')) {
+        type = 'async';
+        const init = result.indexOf('(');
+        const fin = result.lastIndexOf(')');
+        result = result.substr(init + 1, fin - init - 1);
+    }
+
+    return {
+        type,
+        result: createVars(result.split(',')),
+    };
 }
 
 module.exports = {
@@ -84,4 +109,5 @@ module.exports = {
     validateConfig,
     correctBrackets,
     createVars,
+    createResult,
 };
