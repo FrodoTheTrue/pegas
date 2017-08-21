@@ -5,6 +5,7 @@ const assert = require('chai').assert;
 const utils = require('./utils');
 const logger = require('./logger');
 const json5 = require('json5');
+const Promise = require('bluebird');
 
 const FUNCTION_ALLOWED_TYPES = [
     'FunctionDeclaration',
@@ -47,6 +48,7 @@ class Testla {
             if (!FUNCTION_ALLOWED_TYPES.indexOf(functionData.type)) {
                 result.push({
                     type: 'function',
+                    async: functionData.async,
                     name: functionData.id.name,
                     position: functionData.loc.start,
                 });
@@ -109,13 +111,13 @@ class Testla {
      *
      * @param {String[]} paths - files withs Testla comments
      */
-    _runTests(paths) {
+    async _runTests(paths) {
         let file;
         let esprimaData;
         let esprimaSortedData;
         let comments;
 
-        paths.forEach((path) => {
+        paths.forEach(async (path) => {
             file = fs.readFileSync(path, 'utf-8');
 
             if (!file.includes('/*T')) {
@@ -128,7 +130,7 @@ class Testla {
 
             logger.logLine(`File: ${path}`);
 
-            comments.forEach((comment) => {
+            for (const comment of comments) {
                 const commentData = comment.value.split('\n');
 
                 if (commentData[0] !== 'T') {
@@ -144,9 +146,12 @@ class Testla {
                 }
 
                 let funcName;
+                let isFuncAsync;
+
                 for (let i = indexComment; i < esprimaSortedData.length; i++) {
                     if (esprimaSortedData[i].name) {
                         funcName = esprimaSortedData[i].name;
+                        isFuncAsync = esprimaSortedData[i].async;
                         break;
                     }
                 }
@@ -162,32 +167,90 @@ class Testla {
                 logger.logLine(funcName);
 
                 const exportOption = commentData[1].trim();
+
                 if (exportOption.startsWith('ExportAs: ')) {
                     funcName = exportOption.split('ExportAs: ')[1];
                 }
+
                 const testFunc = require(ppath.resolve(path)); //eslint-disable-line
 
-                for (let i = 1; i < commentData.length; i++) {
-                    if (!commentData[i]) continue;
-                    commentData[i] = commentData[i].trim();
+                for (let currentCommentData of commentData) {
+                    if (!currentCommentData) continue;
+                    currentCommentData = currentCommentData.trim();
 
-                    if (commentData[i][0] !== '(') continue;
+                    if (currentCommentData[0] !== '(') continue;
 
-                    let [vars, result] = commentData[i].split('=>');
-                    vars = vars.match(/\(([^)]+)\)/)[1].split(',');
+                    let [vars, result] = currentCommentData.split('=>'); // eslint-disable-line
+                    vars = vars.match(/\(([^)]+)\)/);
 
+                    if (!vars) {
+                        vars = [];
+                    } else {
+                        vars = vars[1].split(',');
+                    }
+
+                    vars = vars.map(v => v.trim());
                     vars = utils.createVars(vars);
-                    result = utils.createVars([result])[0];
 
-                    try {
-                        assert.deepEqual(testFunc[funcName](...vars), result);
+                    const resultData = utils.createResult(result.trim());
 
-                        this._printOk(commentData[i]);
-                    } catch (err) {
-                        this._printError(commentData[i], testFunc[funcName](...vars));
+                    if (resultData.type === 'error') {
+                        try {
+                            assert.throws(() => testFunc[funcName](...vars));
+
+                            this._printOk(currentCommentData);
+                        } catch (err) {
+                            this._printError(currentCommentData, 'Error');
+                        }
+                    }
+
+                    if (resultData.type === 'async') {
+                        let asyncRes;
+                        try {
+                            asyncRes = await new Promise((resolve) => {
+                                testFunc[funcName](...vars, (...args) => {
+                                    resolve(args);
+                                });
+                            });
+
+                            assert.deepEqual(asyncRes, resultData.result);
+
+                            this._printOk(currentCommentData);
+                        } catch (err) {
+                            let expected;
+                            if (!asyncRes) {
+                                expected = 'Error';
+                            } else {
+                                expected = `cb(${asyncRes.join(', ')})`;
+                            }
+                            this._printError(currentCommentData, expected);
+                        }
+                    }
+
+                    if (resultData.type === 'simple') {
+                        let res;
+                        try {
+                            if (isFuncAsync) {
+                                res = await testFunc[funcName](...vars);
+                            } else {
+                                res = testFunc[funcName](...vars);
+                            }
+
+                            assert.deepEqual(res, resultData.result[0]);
+
+                            this._printOk(currentCommentData);
+                        } catch (err) {
+                            let expected;
+                            if (!res) {
+                                expected = 'Error';
+                            } else {
+                                expected = res;
+                            }
+                            this._printError(currentCommentData, expected);
+                        }
                     }
                 }
-            });
+            }
         });
     }
 
